@@ -1,0 +1,101 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "variables": {},
+  "resources": [
+    {
+      "apiVersion": "2015-08-01",
+      "type": "Microsoft.Web/serverfarms",
+      "name": "[concat(resourceGroup().name, '-Plan-Prod')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [ ],
+      "sku": {
+        "name": "S1",
+        "tier": "Standard",
+        "size": "S1",
+        "family": "S",
+        "capacity": 1
+      },
+      "tags": { },
+      "properties": {
+        "name": "[concat(resourceGroup().name, '-Plan-Prod')]",
+        "numberOfWorkers": 1
+      }
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "type": "Microsoft.Web/sites",
+      "name": "[concat(resourceGroup().name, '-Site-Prod')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', concat(resourceGroup().name, '-Plan-Prod'))]"
+      ],
+      "tags": { },
+      "properties": {
+        "serverFarmId": "[concat(resourceGroup().name, '-Plan-Prod')]"
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "type": "slots",
+          "name": "Staging",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', concat(resourceGroup().name, '-Site-Prod'))]"
+          ],
+          "properties": {
+          }
+        }
+      ]
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "type": "Microsoft.Web/serverfarms",
+      "name": "[concat(resourceGroup().name, '-Plan-Test')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [ ],
+      "sku": {
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "family": "B",
+        "capacity": 1
+      },
+      "tags": { },
+      "properties": {
+        "name": "[concat(resourceGroup().name, '-Plan-Test')]",
+        "numberOfWorkers": 1
+      }
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "type": "Microsoft.Web/sites",
+      "name": "[concat(resourceGroup().name, '-Site-Test')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Web/serverfarms/', concat(resourceGroup().name, '-Plan-Test'))]"
+      ],
+      "tags": {},
+      "properties": {
+        "name": "[concat(resourceGroup().name, '-Site-Test')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', concat(resourceGroup().name, '-Plan-Test'))]"
+      }
+    },
+    {
+      "apiVersion": "2014-04-01",
+      "type": "microsoft.insights/components",
+      "name": "[concat(resourceGroup().name, '-AppInsights')]",
+      "location": "[resourceGroup().location]",
+      "kind": "web",
+      "tags": {},
+      "properties": {
+        "ApplicationId": "[concat(resourceGroup().name, '-AppInsights')]"
+      },
+      "resources": [],
+      "dependsOn": []
+    }
+  ],
+  "outputs": {
+  }
+}
