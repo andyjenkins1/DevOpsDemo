@@ -1,12 +1,7 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-
 	"parameters": {
-		"Prefix": {
-			"defaultValue": "DevOpsDemo",
-			"type": "string"
-		},
 		"Location": { 
 			"type": "string", 
 			"defaultValue": "North Europe", 
@@ -19,14 +14,13 @@
 		}    
   },
   "variables": {
-		"location": "[parameters('Location')]",
-    "prefix": "[parameters('Prefix')]"
+		"location": "[parameters('Location')]"
   },
   "resources": [
     {
       "apiVersion": "2015-08-01",
       "type": "Microsoft.Web/serverfarms",
-      "name": "[concat(variables('prefix'), '-Plan-Prod')]",
+      "name": "[concat(resourceGroup().location, '-Plan-Prod')]",
       "location": "[variables('location')]",
       "dependsOn": [ ],
       "sku": {
@@ -38,21 +32,21 @@
       },
       "tags": { },
       "properties": {
-        "name": "[concat(variables('prefix'), '-Plan-Prod')]",
+        "name": "[concat(resourceGroup().location, '-Plan-Prod')]",
         "numberOfWorkers": 1
       }
     },
     {
       "apiVersion": "2015-08-01",
       "type": "Microsoft.Web/sites",
-      "name": "[concat(variables('prefix'), '-Site-Prod')]",
+      "name": "[concat(resourceGroup().location, '-Site-Prod')]",
       "location": "[variables('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', concat(resourceGroup().name, '-Plan-Prod'))]"
       ],
       "tags": { },
       "properties": {
-        "serverFarmId": "[concat(variables('prefix'), '-Plan-Prod')]"
+        "serverFarmId": "[concat(resourceGroup().location, '-Plan-Prod')]"
       },
       "resources": [
         {
@@ -61,7 +55,7 @@
           "name": "Staging",
           "location": "[variables('location')]",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', concat(variables('prefix'), '-Site-Prod'))]"
+            "[resourceId('Microsoft.Web/sites', concat(resourceGroup().location, '-Site-Prod'))]"
           ],
           "properties": {
           }
@@ -71,7 +65,7 @@
     {
       "apiVersion": "2015-08-01",
       "type": "Microsoft.Web/serverfarms",
-      "name": "[concat(variables('prefix'), '-Plan-Test')]",
+      "name": "[concat(resourceGroup().location, '-Plan-Test')]",
       "location": "[variables('location')]",
       "dependsOn": [ ],
       "sku": {
@@ -83,33 +77,33 @@
       },
       "tags": { },
       "properties": {
-        "name": "[concat(variables('prefix'), '-Plan-Test')]",
+        "name": "[concat(resourceGroup().location, '-Plan-Test')]",
         "numberOfWorkers": 1
       }
     },
     {
       "apiVersion": "2015-08-01",
       "type": "Microsoft.Web/sites",
-      "name": "[concat(variables('prefix'), '-Site-Test')]",
+      "name": "[concat(resourceGroup().location, '-Site-Test')]",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Web/serverfarms/', concat(variables('prefix'), '-Plan-Test'))]"
+        "[concat('Microsoft.Web/serverfarms/', concat(resourceGroup().location, '-Plan-Test'))]"
       ],
       "tags": {},
       "properties": {
-        "name": "[concat(variables('prefix'), '-Site-Test')]",
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', concat(variables('prefix'), '-Plan-Test'))]"
+        "name": "[concat(resourceGroup().location, '-Site-Test')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', concat(resourceGroup().location, '-Plan-Test'))]"
       }
     },
     {
       "apiVersion": "2014-04-01",
       "type": "microsoft.insights/components",
-      "name": "[concat(variables('prefix'), '-AppInsights')]",
+      "name": "[concat(resourceGroup().location, '-AppInsights')]",
       "location": "[variables('location')]",
       "kind": "web",
       "tags": {},
       "properties": {
-        "ApplicationId": "[concat(variables('prefix'), '-AppInsights')]"
+        "ApplicationId": "[concat(resourceGroup().location, '-AppInsights')]"
       },
       "resources": [],
       "dependsOn": []
