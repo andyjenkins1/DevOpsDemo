@@ -56,10 +56,10 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [ ],
       "sku": {
-        "name": "B1",
-        "tier": "Basic",
-        "size": "B1",
-        "family": "B",
+        "name": "S1",
+        "tier": "Standard",
+        "size": "S1",
+        "family": "S",
         "capacity": 1
       },
       "tags": { },
