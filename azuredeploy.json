@@ -1,4 +1,4 @@
-{
+2{
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {},
@@ -11,9 +11,9 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [ ],
       "sku": {
-        "name": "S1",
+        "name": "S2",
         "tier": "Standard",
-        "size": "S1",
+        "size": "S2",
         "family": "S",
         "capacity": 1
       },
@@ -56,9 +56,9 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [ ],
       "sku": {
-        "name": "S1",
+        "name": "S2",
         "tier": "Standard",
-        "size": "S1",
+        "size": "S2",
         "family": "S",
         "capacity": 1
       },
